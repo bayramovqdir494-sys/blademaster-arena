@@ -1,0 +1,34 @@
+BLADEMASTER ARENA — Hunyuan3D models (characters + weapons)
+
+GAME: "Blademaster Arena" (single-file HTML, custom WebGL2 instanced renderer, CrazyGames SDK v3).
+All 3D geometry below comes from Tencent Hunyuan3D (/shape_generation). Reference images were rendered
+from the game's own procedural meshes (front/back/left/right, A-pose) so palette + proportions match.
+
+CHARACTERS (models/chars/<kit>.glb) — Space: tencent/Hunyuan3D-2mv (4-view front/back/left/right)
+  glad (Marcus, player)   samurai (Kenji, player)   viking (Bjorn, player)   knight (Roland, player)
+  grunt  spear  archer  brute  assassin  boss (Maximus / Frost Warden / Inferno King, stage-tinted)
+  Each GLB = 10 bone parts in their own pivot frame: torso, head, armR_u, armR_l, armL_u, armL_l,
+  legR_u, legR_l, legL_u, legL_l. Hip pivot (±0.16, 0.52), knee -0.25 below hip, shoulder (±0.39, +0.52
+  above torso pivot), elbow -0.27 below shoulder, neck +0.64. Ball-joint caps at shoulders/elbows/hips/knees
+  and a hidden thigh filler stop gaps when limbs bend. 4.2k–6.5k triangles, 90–140 KB each.
+  Colour = game palette per face (nearest visible procedural surface), stored as COLOR_0 (sRGB values).
+
+WEAPONS (models/props/<name>.glb)
+  gladius — tencent/Hunyuan3D-2.1   dagger — tencent/Hunyuan3D-2   longsword — tencent/Hunyuan3D-2mv
+  katana, hammer, s_bow — Prabhu007K/Hunyuan3D-2.1-Demo   (all /shape_generation, single view)
+  Not yet generated (ZeroGPU quota): axe, greataxe, spear, club, s_round, s_tower -> game keeps its
+  original procedural meshes for these automatically. scripts/retry_all.sh keeps retrying in background;
+  then run scripts/package.sh to rebuild the publish folder/zip.
+
+ANIMATION (in game code, rigid bone hierarchy, all poses blend per frame)
+  idle breathing/sway, run (hip swing + knee flex only during swing phase + elbow pump + torso twist),
+  stride-matched cadence (phase rate = 1.95*speed/scale => planted foot does not slide, big enemies step slower),
+  backward walk reverses the gait, sideways strafing adds hip abduction, 3-hit combo (wind-up elbow cock ->
+  extended strike), overhead finisher with knee dip, roll tuck, rage spin, enemy wind-ups (arc, spear thrust,
+  ground-slam crouch, bow draw, dash crouch, boss leap/spin), hit stagger with knee buckle, death fall.
+
+FILES
+  raw/*.mv.glb, raw/*.shape.glb   original Hunyuan outputs (kept)
+  glb/, glb_props/                game-ready GLBs     glb_debug/  part-coloured debug versions
+  ref/                            reference images sent to Hunyuan    qa/  QA sheets
+  scripts/ render_refs.py render_props.py gen.py gen_mv.py gen_mv_props.py process.py process_props.py package.sh retry_all.sh
